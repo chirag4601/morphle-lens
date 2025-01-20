@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import json
+import mimetypes
 import os
 from pathlib import Path
 
@@ -26,9 +27,9 @@ environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 SECRET_KEY = "django-insecure-nimgj=scwf$qa9n+%@%02!6!f7zg$plgpj&4wxhg@dtpckb6ad"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = ENV.bool('DEBUG', False)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = json.loads(ENV('ALLOWED_HOSTS'))
 
 # Application definition
 
@@ -38,7 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "django.contrib.staticfiles",
+    'django.contrib.staticfiles',
     "backend",
     "frontend",
     "rest_framework",
@@ -121,9 +122,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
-STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_URL='static/'
 STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "frontend", "dist"),
     os.path.join(BASE_DIR, "frontend", "public"),
 ]
 
@@ -131,3 +133,10 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
+mimetypes.add_type("text/css", ".css", True)
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
