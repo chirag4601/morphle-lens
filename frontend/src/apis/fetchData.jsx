@@ -18,10 +18,11 @@ export const fetchData = async ({
   ...params
 }) => {
   try {
+    const VITE_API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
     if (!url) return null;
     const fetchedData = await axios({
       method: method,
-      url: url,
+      url: VITE_API_BASE_URL + url,
       data: data,
       ...params,
       headers: {

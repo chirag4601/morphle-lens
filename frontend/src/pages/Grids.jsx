@@ -1,5 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+
 import { API_METHODS, fetchData } from "../apis/fetchData";
+import {
+  FOCUS_MACHINE_URL,
+  GET_STATE_URL,
+  MOVE_MACHINE_URL,
+  RESET_MACHINE_URL,
+} from "../utils/urls";
 
 const GRID_SIZE = { width: 100, height: 60 };
 const CELL_SIZE = 12;
@@ -20,7 +27,7 @@ const MachineControl = () => {
 
   useEffect(() => {
     const fetchState = async () => {
-      const response = await fetchData({ url: "/backend/api/state/" });
+      const response = await fetchData({ url: GET_STATE_URL });
       setCurrentState(response.current);
       targetRef.current = response.current;
       setTargetPosition(response.current);
@@ -46,7 +53,7 @@ const MachineControl = () => {
     setCurrentState((prev) => ({ ...prev, status: "moving" }));
     processingRef.current = true;
     const response = await fetchData({
-      url: "/backend/api/move/",
+      url: MOVE_MACHINE_URL,
       method: API_METHODS.POST,
       data: { x: targetX, y: targetY },
     });
@@ -61,7 +68,7 @@ const MachineControl = () => {
 
   const focusMachine = async (targetX, targetY) => {
     processingRef.current = true;
-    await updateMachineState({ url: "/backend/api/focus/" });
+    await updateMachineState({ url: FOCUS_MACHINE_URL });
     processingRef.current = false;
     if (targetX !== targetRef.current.x || targetY !== targetRef.current.y)
       await moveMachine(targetRef.current.x, targetRef.current.y);
@@ -86,7 +93,7 @@ const MachineControl = () => {
 
   const handleReset = async () => {
     setIsResetting(true);
-    await updateMachineState({ url: "/backend/api/reset/" });
+    await updateMachineState({ url: RESET_MACHINE_URL });
     targetRef.current = { x: 0, y: 0 };
     setTargetPosition({ x: 0, y: 0 });
     setIsResetting(false);
