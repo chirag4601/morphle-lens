@@ -118,8 +118,8 @@ const MachineControl = () => {
       <div
         className="relative overflow-y-scroll bg-white"
         style={{
-          width: GRID_SIZE.width * CELL_SIZE,
-          height: GRID_SIZE.height * CELL_SIZE,
+          width: GRID_SIZE.width * CELL_SIZE + 20,
+          height: GRID_SIZE.height * CELL_SIZE + 20,
           backgroundImage: `linear-gradient(to right, #e5e7eb 1px, transparent 1px),
                           linear-gradient(to bottom, #e5e7eb 1px, transparent 1px)`,
           backgroundSize: `${CELL_SIZE}px ${CELL_SIZE}px`,
