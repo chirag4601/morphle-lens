@@ -8,8 +8,11 @@ import {
   RESET_MACHINE_URL,
 } from "../utils/urls";
 
-const GRID_SIZE = { width: 100, height: 60 };
-const CELL_SIZE = 12;
+const GRID_SIZE = {
+  width: import.meta.env.VITE_GRID_WIDTH || 76,
+  height: import.meta.env.VITE_GRID_HEIGHT || 26,
+};
+const CELL_SIZE = import.meta.env.VITE_CELL_SIZE || 16;
 
 const MachineControl = () => {
   const [currentState, setCurrentState] = useState({
@@ -116,7 +119,7 @@ const MachineControl = () => {
     <div className="p-4 flex flex-col items-center">
       Press Any arrow key to move microscope scope.
       <div
-        className="relative overflow-y-scroll bg-white"
+        className="my-8 relative overflow-y-scroll bg-white"
         style={{
           width: GRID_SIZE.width * CELL_SIZE + 20,
           height: GRID_SIZE.height * CELL_SIZE + 20,
