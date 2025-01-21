@@ -34,6 +34,7 @@ MachineHistory.init(
     x_position: DataTypes.INTEGER,
     y_position: DataTypes.INTEGER,
     status: DataTypes.STRING,
+    created_at: DataTypes.DATE,
   },
   {
     sequelize,

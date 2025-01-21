@@ -1,4 +1,3 @@
-// routes/machineRoutes.js
 const express = require("express");
 const {
   getState,

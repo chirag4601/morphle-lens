@@ -16,13 +16,15 @@ const getMachineHistory = async () => {
 const getState = async (req, res) => {
   const state = await getMachineState();
   const history = await getMachineHistory();
-  console.log("state: ", state, history);
   res.json(createResponse(state, history));
 };
 
-const moveMachine = requireIdleState(async (req, res) => {
+const moveMachine = async (req, res) => {
   const { x: targetX, y: targetY } = req.body;
   const state = await getMachineState();
+
+  if (state.status !== "idle")
+    return res.status(400).json({ error: "Machine is busy" });
 
   await state.update({ status: "moving" });
   await focusMachineSimulation();
@@ -36,13 +38,16 @@ const moveMachine = requireIdleState(async (req, res) => {
     x_position: targetX,
     y_position: targetY,
     status: "green",
+    created_at: new Date(),
   });
   const history = await getMachineHistory();
   res.json(createResponse(state, history));
-});
+};
 
-const focusMachine = requireIdleState(async (req, res) => {
+const focusMachine = async (req, res) => {
   const state = await getMachineState();
+  if (state.status !== "idle")
+    return res.status(400).json({ error: "Machine is busy" });
 
   await state.update({ status: "processing" });
   await moveMachineSimulation();
@@ -51,11 +56,12 @@ const focusMachine = requireIdleState(async (req, res) => {
     x_position: state.x_position,
     y_position: state.y_position,
     status: "red",
+    created_at: new Date(),
   });
   await state.update({ status: "idle" });
   const history = await getMachineHistory();
   res.json(createResponse(state, history));
-});
+};
 
 const resetMachine = async (req, res) => {
   await MachineHistory.destroy({ where: {} });

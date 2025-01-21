@@ -1,11 +1,11 @@
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const focusMachineSimulation = async () => {
-  await sleep(2000);
+  await sleep(process.env.FOCUS_TIME || 2000);
 };
 
 const moveMachineSimulation = async () => {
-  await sleep(3000);
+  await sleep(process.env.MOVE_TIME || 3000);
 };
 
 const createResponse = (state, history = null) => {
@@ -19,19 +19,8 @@ const createResponse = (state, history = null) => {
   };
 };
 
-const requireIdleState = (fn) => {
-  return async (req, res) => {
-    const state = await getMachineState();
-    if (state.status !== "idle") {
-      return res.status(400).json({ error: "Machine is busy" });
-    }
-    return fn(req, res);
-  };
-};
-
 module.exports = {
   focusMachineSimulation,
   moveMachineSimulation,
   createResponse,
-  requireIdleState,
 };
